@@ -1,0 +1,22 @@
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: RunnerDeployment
+metadata:
+  name: github-runner-deployment-<repo-name>
+spec:
+  template:
+    spec:
+      repository: <organizationName>/<repo-name>
+---
+apiVersion: actions.summerwind.dev/v1alpha1
+kind: HorizontalRunnerAutoscaler
+metadata:
+  name: github-runner-deployment-scaler-<repo-name>
+spec:
+  scaleTargetRef:
+    name: github-runner-deployment-<repo-name>
+  minReplicas: 0
+  maxReplicas: 5
+  metrics:
+  - type: TotalNumberOfQueuedAndInProgressWorkflowRuns
+    repositoryNames:
+    - <repo-name>
